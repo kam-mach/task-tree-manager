@@ -1,0 +1,13 @@
+POST http://localhost:8080/
+Content-Type: application/json
+
+{
+  "title":"Zrobić zadanie domowe!"
+}
+
+###
+
+GET http://localhost:8080/
+Accept: application/json
+
+###
