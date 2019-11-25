@@ -1,4 +1,4 @@
-package pl.springnauka.Tasks;
+package pl.springnauka.tasktreemanager.tasks;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -8,12 +8,12 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping(path = "/")
-public class TaskController {
+public class TasksController {
 
 
     private TasksRepository tasksRepository;
 
-    public TaskController(TasksRepository tasksRepository) {
+    public TasksController(TasksRepository tasksRepository) {
         this.tasksRepository = tasksRepository;
     }
 
