@@ -1,14 +1,14 @@
-package pl.springnauka.Tasks;
+package pl.springnauka.tasktreemanager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
-public class TasksApplication {
+public class TaskTreeManagerApplication {
 
 	public static void main(String[] args) {
-		ConfigurableApplicationContext context = SpringApplication.run(TasksApplication.class, args);
+		ConfigurableApplicationContext context = SpringApplication.run(TaskTreeManagerApplication.class, args);
 
 	}
 

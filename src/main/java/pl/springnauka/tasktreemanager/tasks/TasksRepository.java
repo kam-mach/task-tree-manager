@@ -1,4 +1,4 @@
-package pl.springnauka.Tasks;
+package pl.springnauka.tasktreemanager.tasks;
 
 import java.util.List;
 

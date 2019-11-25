@@ -1,10 +1,10 @@
-package pl.springnauka.Tasks;
+package pl.springnauka.tasktreemanager;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TasksApplicationTests {
+class TaskTreeManagerApplicationTests {
 
 	@Test
 	void contextLoads() {
