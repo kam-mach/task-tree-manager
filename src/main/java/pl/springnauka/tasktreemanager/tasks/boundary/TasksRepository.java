@@ -1,4 +1,6 @@
-package pl.springnauka.tasktreemanager.tasks;
+package pl.springnauka.tasktreemanager.tasks.boundary;
+
+import pl.springnauka.tasktreemanager.tasks.entity.Task;
 
 import java.util.List;
 

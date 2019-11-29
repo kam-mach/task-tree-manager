@@ -1,6 +1,7 @@
-package pl.springnauka.tasktreemanager.tasks;
+package pl.springnauka.tasktreemanager.tasks.boundary;
 
 import org.springframework.stereotype.Repository;
+import pl.springnauka.tasktreemanager.tasks.entity.Task;
 
 import java.util.ArrayList;
 import java.util.HashSet;

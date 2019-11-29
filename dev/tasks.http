@@ -2,10 +2,8 @@ POST http://localhost:8080/api/tasks
 Content-Type: application/json
 
 {
-  "id": "2",
   "title": "Zrobić zadanie domowe! 1",
-  "author": "Kamil2",
-  "date": "2019-11-25"
+  "description": "Zadanie 6"
 }
 
 ###
