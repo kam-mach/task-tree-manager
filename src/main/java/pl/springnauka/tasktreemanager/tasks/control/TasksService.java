@@ -23,4 +23,8 @@ public class TasksService {
                 description
         ));
     }
+
+    public void updateTask(Long id, String title, String description) {
+        tasksRepository.update(id, title, description);
+    }
 }

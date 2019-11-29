@@ -62,9 +62,10 @@ public class TasksController {
         tasksRepository.deleteById(id);
     }
 
-    @PutMapping
-    public void updateTask() {
-        log.info("Nadpisuję zadanie");
+    @PutMapping(path = "/{id}")
+    public void updateTask(@PathVariable Long id, @RequestBody UpdateTaskRequest taskRequest) {
+        log.info("Nadpisuję zadanie {}", id);
+        tasksService.updateTask(id, taskRequest.getTitle(), taskRequest.getDescription());
     }
 
     private TaskResponse toTaskResponse(Task task) {
