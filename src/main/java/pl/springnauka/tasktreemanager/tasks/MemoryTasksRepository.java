@@ -21,4 +21,24 @@ public class MemoryTasksRepository implements TasksRepository {
     public List<Task> fetchAll() {
         return new ArrayList<>(taskSet);
     }
+
+    @Override
+    public Task fetchById(Long id) {
+        return taskSet
+                .stream()
+                .filter(task -> id.equals(task.getId()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Zadanie nie znalezione"));
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        taskSet
+                .stream()
+                .filter(task -> id.equals(task.getId()))
+                .findFirst()
+                .ifPresent(taskSet::remove);
+
+    }
+
 }

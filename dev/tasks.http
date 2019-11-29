@@ -1,15 +1,26 @@
-POST http://localhost:8080/
+POST http://localhost:8080/api/tasks
 Content-Type: application/json
 
 {
-  "title": "Zrobić zadanie domowe!",
-  "author": "Kamil",
+  "id": "2",
+  "title": "Zrobić zadanie domowe! 1",
+  "author": "Kamil2",
   "date": "2019-11-25"
 }
 
 ###
 
-GET http://localhost:8080/
+GET http://localhost:8080/api/tasks
+Accept: application/json
+
+###
+
+DELETE http://localhost:8080/api/tasks/2
+Accept: application/json
+
+###
+
+PUT http://localhost:8080/api/tasks
 Accept: application/json
 
 ###
