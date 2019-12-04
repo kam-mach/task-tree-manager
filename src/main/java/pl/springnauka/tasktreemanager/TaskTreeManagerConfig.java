@@ -1,10 +1,8 @@
-package pl.springnauka.tasktreemanager.tasks;
+package pl.springnauka.tasktreemanager;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import pl.springnauka.tasktreemanager.Clock;
-import pl.springnauka.tasktreemanager.SystemClock;
 
 @Slf4j
 @Configuration

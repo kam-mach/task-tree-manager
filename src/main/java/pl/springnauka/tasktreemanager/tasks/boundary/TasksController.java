@@ -7,6 +7,7 @@ import pl.springnauka.tasktreemanager.tasks.entity.Task;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -34,9 +35,10 @@ public class TasksController {
     }
 
     @GetMapping
-    public List<TaskResponse> getTasks() {
-        log.info("Zwracam listę zadań!");
-        return tasksRepository.fetchAll()
+    public List<TaskResponse> getTasks(@RequestParam Optional<String> query) {
+        log.info("Zwracam listę zadań! z query {}", query);
+        return query.map(tasksService::filterAllByQuery)
+                .orElseGet(tasksService::fetchAll)
                 .stream()
                 .map(this::toTaskResponse)
                 .collect(toList());
