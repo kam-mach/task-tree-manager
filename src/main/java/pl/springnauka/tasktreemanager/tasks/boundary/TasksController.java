@@ -6,7 +6,6 @@ import pl.springnauka.tasktreemanager.tasks.control.TasksService;
 import pl.springnauka.tasktreemanager.tasks.entity.Task;
 
 import javax.annotation.PostConstruct;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -69,6 +68,6 @@ public class TasksController {
     }
 
     private TaskResponse toTaskResponse(Task task) {
-        return new TaskResponse(task.getId(), task.getTitle(), task.getDescription(), LocalDateTime.now());
+        return new TaskResponse(task.getId(), task.getTitle(), task.getDescription(), task.getCreatedAt());
     }
 }
