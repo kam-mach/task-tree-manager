@@ -1,4 +1,4 @@
-POST http://localhost:9000/api/tasks
+POST http://localhost:8080/api/tasks
 Content-Type: application/json
 
 {
@@ -7,7 +7,7 @@ Content-Type: application/json
 }
 
 ###
-PUT http://localhost:9000/api/tasks/0
+PUT http://localhost:8080/api/tasks/1
 Content-Type: application/json
 
 {
@@ -17,7 +17,7 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:9000/api/tasks
+GET http://localhost:8080/api/tasks
 Accept: application/json
 
 ###

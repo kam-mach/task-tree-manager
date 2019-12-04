@@ -1,7 +1,10 @@
 package pl.springnauka.tasktreemanager.tasks.boundary;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.springnauka.tasktreemanager.exceptions.NotFoundException;
 import pl.springnauka.tasktreemanager.tasks.control.TasksService;
 import pl.springnauka.tasktreemanager.tasks.entity.Task;
 
@@ -64,9 +67,15 @@ public class TasksController {
     }
 
     @PutMapping(path = "/{id}")
-    public void updateTask(@PathVariable Long id, @RequestBody UpdateTaskRequest taskRequest) {
+    public ResponseEntity updateTask(@PathVariable Long id, @RequestBody UpdateTaskRequest taskRequest) {
         log.info("Nadpisuję zadanie {}", id);
-        tasksService.updateTask(id, taskRequest.getTitle(), taskRequest.getDescription());
+        try {
+            tasksService.updateTask(id, taskRequest.getTitle(), taskRequest.getDescription());
+            return ResponseEntity.noContent().build();
+        } catch (NotFoundException e) {
+            log.error(e.toString());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     private TaskResponse toTaskResponse(Task task) {

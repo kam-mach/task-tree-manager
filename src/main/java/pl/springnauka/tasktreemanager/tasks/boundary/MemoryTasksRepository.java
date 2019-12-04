@@ -1,6 +1,7 @@
 package pl.springnauka.tasktreemanager.tasks.boundary;
 
 import org.springframework.stereotype.Repository;
+import pl.springnauka.tasktreemanager.exceptions.NotFoundException;
 import pl.springnauka.tasktreemanager.tasks.entity.Task;
 
 import java.util.*;
@@ -35,10 +36,10 @@ public class MemoryTasksRepository implements TasksRepository {
 
     @Override
     public void update(Long id, String title, String description) {
-        findById(id).ifPresent(task -> {
-            task.setTitle(title);
-            task.setDescription(description);
-        });
+        Task task = findById(id).orElseThrow(() -> new NotFoundException("Task not found with id = " + id));
+        task.setTitle(title);
+        task.setDescription(description);
+
     }
 
     private Optional<Task> findById(Long id) {
