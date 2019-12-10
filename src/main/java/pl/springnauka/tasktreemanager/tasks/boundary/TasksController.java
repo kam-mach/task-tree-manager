@@ -1,15 +1,22 @@
 package pl.springnauka.tasktreemanager.tasks.boundary;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import pl.springnauka.tasktreemanager.exceptions.NotFoundException;
 import pl.springnauka.tasktreemanager.tasks.control.TasksService;
 import pl.springnauka.tasktreemanager.tasks.entity.Task;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
@@ -17,16 +24,12 @@ import static java.util.stream.Collectors.toList;
 @Slf4j
 @RestController
 @RequestMapping(path = "/api/tasks")
+@RequiredArgsConstructor
 public class TasksController {
 
-
-    private TasksRepository tasksRepository;
-    private TasksService tasksService;
-
-    public TasksController(TasksRepository tasksRepository, TasksService tasksService) {
-        this.tasksRepository = tasksRepository;
-        this.tasksService = tasksService;
-    }
+    private final StorageService storageService;
+    private final TasksRepository tasksRepository;
+    private final TasksService tasksService;
 
     @PostConstruct
     void init() {
@@ -51,6 +54,25 @@ public class TasksController {
     public TaskResponse getTaskById(@PathVariable Long id) {
         log.info("Zwracam zadanie {}", id);
         return toTaskResponse(tasksRepository.fetchById(id));
+    }
+
+    @GetMapping(path = "/{id}/attachments/{filename}")
+    public ResponseEntity getAttachment(@PathVariable Long id, @PathVariable String filename, HttpServletRequest request) throws IOException {
+        log.info("Zwracam załącznik o nazwie {} dla zadania {}", filename, id);
+        Resource resource = storageService.loadFile(filename);
+        String mimeType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+        if (Objects.isNull(mimeType)) {
+            mimeType = "application/octet-stream";
+        }
+
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType(mimeType)).body(resource);
+    }
+
+    @PostMapping(path = "/{id}/attachments")
+    public ResponseEntity addAttachment(@PathVariable Long id, @RequestParam("file") MultipartFile filename) throws IOException {
+        log.info("Dodaję załącznik o nazwie {} dla zadania {}", filename.getName(), id);
+        storageService.saveFile(id, filename);
+        return ResponseEntity.noContent().build();
     }
 
 
