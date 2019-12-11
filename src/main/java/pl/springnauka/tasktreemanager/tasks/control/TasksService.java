@@ -22,14 +22,16 @@ public class TasksService {
         this.clock = clock;
     }
 
-    public void addTask(String title, String description) {
-        tasksRepository.add(new Task(
+    public Task addTask(String title, String description) {
+        Task task = new Task(
                 nextTaskId.getAndIncrement(),
                 title,
                 description,
                 clock.time(),
                 new ArrayList<>()
-        ));
+        );
+        tasksRepository.add(task);
+        return task;
     }
 
     public void updateTask(Long id, String title, String description) {
@@ -44,5 +46,9 @@ public class TasksService {
         return tasksRepository.fetchAll()
                 .stream().filter(task -> task.getTitle().contains(query) || task.getDescription().contains(query)
                 ).collect(Collectors.toList());
+    }
+
+    public void deleteById(Long id) {
+        tasksRepository.deleteById(id);
     }
 }
