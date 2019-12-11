@@ -1,3 +1,4 @@
 server.port: 9000
 
-app.tasks.localPath: C:/tasktree
+app.tasks:
+      localpath: C:/tasktree

@@ -10,5 +10,5 @@ public interface StorageService {
 
     void saveFile(Long id, MultipartFile file) throws IOException;
 
-    Resource loadFile(String filename) throws MalformedURLException;
+    Resource loadFile(Long id, String filename) throws MalformedURLException;
 }

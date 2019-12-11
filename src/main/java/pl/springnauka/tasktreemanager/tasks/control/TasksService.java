@@ -5,6 +5,7 @@ import pl.springnauka.tasktreemanager.Clock;
 import pl.springnauka.tasktreemanager.tasks.boundary.TasksRepository;
 import pl.springnauka.tasktreemanager.tasks.entity.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -26,7 +27,8 @@ public class TasksService {
                 nextTaskId.getAndIncrement(),
                 title,
                 description,
-                clock.time()
+                clock.time(),
+                new ArrayList<>()
         ));
     }
 
@@ -40,9 +42,7 @@ public class TasksService {
 
     public List<Task> filterAllByQuery(String query) {
         return tasksRepository.fetchAll()
-                .stream().filter(task -> {
-                            return task.getTitle().contains(query) || task.getDescription().contains(query);
-                        }
+                .stream().filter(task -> task.getTitle().contains(query) || task.getDescription().contains(query)
                 ).collect(Collectors.toList());
     }
 }

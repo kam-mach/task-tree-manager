@@ -15,4 +15,6 @@ public interface TasksRepository {
     void deleteById(Long id);
 
     void update(Long id, String title, String description);
+
+    void addFiles(Long id, String path);
 }
