@@ -1,13 +1,14 @@
-package pl.springnauka.tasktreemanager.tasks;
+package pl.springnauka.tasktreemanager;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
+@Getter
+@Setter
 @ConfigurationProperties(prefix = "app.tasks")
-@Data
-public class TasksConfig {
-
-    private String endpointMessage;
+public class StorageConfig {
+    private String localPath;
 }
