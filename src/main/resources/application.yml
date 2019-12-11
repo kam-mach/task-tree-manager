@@ -1,4 +1,4 @@
 server.port: 9000
 
 app.tasks:
-    endpointMessage: Hello, World!
+      localpath: C:/tasktree
