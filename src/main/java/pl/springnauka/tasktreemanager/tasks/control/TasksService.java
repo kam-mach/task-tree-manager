@@ -51,4 +51,8 @@ public class TasksService {
     public void deleteById(Long id) {
         tasksRepository.deleteById(id);
     }
+
+    public Task fetchById(Long id) {
+        return tasksRepository.fetchById(id);
+    }
 }
