@@ -25,10 +25,10 @@ import static java.util.stream.Collectors.toList;
 @RestController
 @RequestMapping(path = "/api/tasks")
 @RequiredArgsConstructor
+@CrossOrigin
 public class TasksController {
 
     private final StorageService storageService;
-    private final TasksRepository tasksRepository;
     private final TasksService tasksService;
 
     @PostConstruct
@@ -54,11 +54,11 @@ public class TasksController {
     public ResponseEntity<TaskResponse> getTaskById(@PathVariable Long id) {
         log.info("Zwracam zadanie {}", id);
         try {
-            TaskResponse taskResponse = toTaskResponse(tasksRepository.fetchById(id));
+            TaskResponse taskResponse = toTaskResponse(tasksService.fetchById(id));
             return ResponseEntity.ok(taskResponse);
-        } catch (IllegalArgumentException e) {
+        } catch (NotFoundException e) {
             log.error(e.getMessage());
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
@@ -72,7 +72,7 @@ public class TasksController {
                 mimeType = "application/octet-stream";
             }
             return ResponseEntity.ok().contentType(MediaType.parseMediaType(mimeType)).body(resource);
-        } catch (IllegalArgumentException | NotFoundException e) {
+        } catch (NotFoundException e) {
             log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (IOException e) {
@@ -86,7 +86,7 @@ public class TasksController {
         log.info("Dodaję załącznik o nazwie {} dla zadania {}", filename.getName(), id);
         try {
             storageService.saveFile(id, filename);
-        } catch (IllegalArgumentException e) {
+        } catch (NotFoundException e) {
             log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (IOException e) {
@@ -108,9 +108,9 @@ public class TasksController {
     public ResponseEntity<String> deleteTask(@PathVariable Long id) {
         log.info("Usuwam zadanie {}", id);
         try {
-            tasksRepository.deleteById(id);
+            tasksService.deleteById(id);
             return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
+        } catch (NotFoundException e) {
             log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
@@ -122,7 +122,7 @@ public class TasksController {
         try {
             tasksService.updateTask(id, taskRequest.getTitle(), taskRequest.getDescription());
             return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
+        } catch (NotFoundException e) {
             log.error(e.toString());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

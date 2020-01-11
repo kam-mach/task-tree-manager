@@ -23,7 +23,7 @@ public class FileSystemStorageService implements StorageService {
 
     @Override
     public void saveFile(Long id, MultipartFile file) throws IOException {
-        Path targetPath = path.resolve(file.getName());
+        Path targetPath = path.resolve(file.getOriginalFilename());
         Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
         tasksRepository.addFiles(id, targetPath.toString());
 

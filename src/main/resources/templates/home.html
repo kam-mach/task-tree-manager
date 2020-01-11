@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <link href="../static/css/bootstrap.css" rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
+    <title>TaskTreeManagement</title>
+</head>
+<body>
+<h1 class="card-title text-center mx-auto">
+    Lista zadań
+</h1>
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Tytuł</th>
+            <th>Opis</th>
+            <th>Data utworzenia</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <tr th:each="task: ${#lists.sort(tasks)}">
+            <td th:text="${task.id}"></td>
+            <td th:text="${task.title}"></td>
+            <td th:text="${task.description}"></td>
+            <td th:text="${{task.createdAt}}"></td>
+            <td>
+                <form action="#" th:action="@{/tasks/delete/{id}(id=${task.id})}" method="post">
+                    <button class="btn-danger" type="submit">Usuń</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <hr class="col-xs-12">
+    <h4 class="card-header text-center mb-2">
+        Dodaj nowe zadanie
+    </h4>
+    <form action="#" th:object="${newTask}" th:action="@{/tasks}" method="post"
+          enctype="multipart/form-data">
+        <div class="form-group row">
+            <label for="titleInput" class="col-sm-2 control-label">Tytuł</label>
+            <div class="col-sm-10">
+                <input id="titleInput" type="text" class="form-control" placeholder="Tytuł zadania" th:field="*{title}">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="opisTextField" class="col-sm-2 control-label">Opis</label>
+            <div class="col-sm-10">
+        <textarea id="opisTextField" class="form-control" placeholder="Opis zadania"
+                  th:field="*{description}"></textarea>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="attachmentInput" class="col-sm-2 control-label">Załącznik</label>
+            <div class="col-sm-10">
+                <input id="attachmentInput" class="form-control-file" type="file" name="attachment">
+            </div>
+        </div>
+        <div class="mb-2 col-sm-10 text-right">
+            <button type="submit" class="btn btn-primary">Wyślij</button>
+        </div>
+    </form>
+</div>
+<footer class="footer mx-auto text-right">
+    <p class="card-footer">&copy; Kamil Machura 2020 &#128513;</p>
+</footer>
+</body>
+</html>

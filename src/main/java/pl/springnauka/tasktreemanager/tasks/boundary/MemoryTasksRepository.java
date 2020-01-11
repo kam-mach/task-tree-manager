@@ -1,6 +1,7 @@
 package pl.springnauka.tasktreemanager.tasks.boundary;
 
 import org.springframework.stereotype.Repository;
+import pl.springnauka.tasktreemanager.exceptions.NotFoundException;
 import pl.springnauka.tasktreemanager.tasks.entity.Task;
 
 import java.util.*;
@@ -23,19 +24,19 @@ public class MemoryTasksRepository implements TasksRepository {
     @Override
     public Task fetchById(Long id) {
         return findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Zadanie nie znalezione"));
+                .orElseThrow(() -> new NotFoundException("Zadanie nie znalezione"));
     }
 
     @Override
     public void deleteById(Long id) {
         findById(id).map(taskSet::remove)
-                .orElseThrow(() -> new IllegalArgumentException("Zadanie nie znalezione"));
+                .orElseThrow(() -> new NotFoundException("Zadanie nie znalezione"));
 
     }
 
     @Override
     public void update(Long id, String title, String description) {
-        Task task = findById(id).orElseThrow(() -> new IllegalArgumentException("Task not found with id = " + id));
+        Task task = findById(id).orElseThrow(() -> new NotFoundException("Task not found with id = " + id));
         task.setTitle(title);
         task.setDescription(description);
 
@@ -43,7 +44,7 @@ public class MemoryTasksRepository implements TasksRepository {
 
     @Override
     public void addFiles(Long id, String path) {
-        Task task = findById(id).orElseThrow(() -> new IllegalArgumentException("Zadanie nie znalezione"));
+        Task task = findById(id).orElseThrow(() -> new NotFoundException("Zadanie nie znalezione"));
         List<String> files = task.getFiles();
         files.add(path);
         task.setFiles(files);
