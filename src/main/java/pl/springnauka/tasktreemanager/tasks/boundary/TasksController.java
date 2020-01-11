@@ -25,6 +25,7 @@ import static java.util.stream.Collectors.toList;
 @RestController
 @RequestMapping(path = "/api/tasks")
 @RequiredArgsConstructor
+@CrossOrigin
 public class TasksController {
 
     private final StorageService storageService;
