@@ -27,7 +27,7 @@ Accept: application/json
 
 ###
 
-DELETE http://localhost:8080/api/tasks/9
+DELETE http://localhost:8080/api/tasks/1
 Accept: application/json
 
 ###

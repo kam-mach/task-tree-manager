@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS TASKS;
+
+CREATE TABLE TASKS(
+id identity ,
+title VARCHAR(100),
+description VARCHAR(1024),
+created_at TIMESTAMP
+)
