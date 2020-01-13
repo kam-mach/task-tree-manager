@@ -54,7 +54,10 @@ public class AdaptedTaskCrudRepository implements TasksRepository {
     }
 
     @Override
-    public void addFiles(Long id, String path) {
-
+    public void addAttachment(Long id, String path) {
+        Task task = fetchById(id);
+        task.addAttachment(path);
+        taskCrudRepository.save(task);
     }
+
 }

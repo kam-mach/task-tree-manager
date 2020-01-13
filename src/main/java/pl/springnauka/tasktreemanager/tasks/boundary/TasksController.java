@@ -129,6 +129,6 @@ public class TasksController {
     }
 
     private TaskResponse toTaskResponse(Task task) {
-        return new TaskResponse(task.getId(), task.getTitle(), task.getDescription(), task.getCreatedAt(), task.getFiles());
+        return new TaskResponse(task.getId(), task.getTitle(), task.getDescription(), task.getCreatedAt(), task.getAttachments());
     }
 }

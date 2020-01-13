@@ -5,8 +5,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+
+import static java.util.stream.Collectors.toList;
 
 @Data
 @Table("tasks")
@@ -17,7 +19,8 @@ public class Task implements Comparable<Task> {
     private String title;
     private String description;
     private LocalDateTime createdAt;
-    //    private List<String> files;
+    //pierwotnie lista, dla testów jdbc zostanie Set, sprawdzić zachowanie przy użyciu JPA
+    private Set<Attachment> attachments;
 
     public Task(String title, String description, LocalDateTime createdAt) {
         this.title = title;
@@ -25,12 +28,15 @@ public class Task implements Comparable<Task> {
         this.createdAt = createdAt;
     }
 
-
-    public List<String> getFiles() {
-        return Collections.emptyList();
+    public List<String> getAttachments() {
+        return attachments
+                .stream()
+                .map(Attachment::getFilename)
+                .collect(toList());
     }
 
-    public void setFiles(List<String> files) {
+    public void addAttachment(String filename) {
+        attachments.add(new Attachment(filename));
     }
 
     @Override

@@ -23,16 +23,16 @@ public class FileSystemStorageService implements StorageService {
 
     @Override
     public void saveFile(Long id, MultipartFile file) throws IOException {
-        Path targetPath = path.resolve(file.getOriginalFilename());
+        String filename = file.getOriginalFilename();
+        Path targetPath = path.resolve(filename);
         Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
-        tasksRepository.addFiles(id, targetPath.toString());
-
+        tasksRepository.addAttachment(id, filename);
     }
 
     @Override
     public Resource loadFile(Long id, String filename) throws MalformedURLException {
 
-        if (tasksRepository.fetchById(id).getFiles().contains(path.resolve(filename).toString())) {
+        if (tasksRepository.fetchById(id).getAttachments().contains(filename)) {
             return new UrlResource(path.resolve(filename).toUri());
         } else {
             throw new NotFoundException("Dla wybranego zadania, nie znaleziono takiego pliku");
