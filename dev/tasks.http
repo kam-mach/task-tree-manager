@@ -32,11 +32,20 @@ Accept: application/json
 
 ###
 
-PUT http://localhost:9000/api/tasks/0
+PUT localhost:8080/api/tasks/1
 Content-Type: application/json
+
 {
-"title": "Zadanie 0",
-"description": "Nadpisanie"
+  "title": "Zadanie 0",
+  "description": "Nadpisanie"
 }
 
+###
+
+POST http://localhost:8080/api/tasks/2/tags
+Content-Type: application/json
+
+{
+  "tagId": "2"
+}
 ###

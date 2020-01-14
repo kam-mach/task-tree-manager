@@ -1,32 +1,34 @@
-DROP TABLE IF EXISTS tasks;
-DROP TABLE IF EXISTS attachments;
-DROP TABLE IF EXISTS tags;
-DROP TABLE IF EXISTS tags_task;
+DROP TABLE IF EXISTS task;
+DROP TABLE IF EXISTS attachment;
+DROP TABLE IF EXISTS tag;
+DROP TABLE IF EXISTS tag_task;
 
-CREATE TABLE tasks
+CREATE TABLE task
 (
-id identity,
-title VARCHAR(100),
-description VARCHAR(1024),
-created_at TIMESTAMP
+    id          identity,
+    title       VARCHAR(100),
+    description VARCHAR(1024),
+    created_at  TIMESTAMP
 );
 
-CREATE TABLE attachments
+CREATE TABLE attachment
 (
-filename VARCHAR(100) UNIQUE,
-comment VARCHAR(1024),
-task NUMERIC,
-FOREIGN KEY (task) REFERENCES tasks (id)
+    filename VARCHAR(100) UNIQUE,
+    comment  VARCHAR(1024),
+    task     NUMERIC,
+    FOREIGN KEY (task) REFERENCES task (id)
 );
 
-CREATE TABLE tags (
-id IDENTITY,
-nazwa VARCHAR(100)
+CREATE TABLE tag
+(
+    id   IDENTITY,
+    name VARCHAR(100)
 );
 
-CREATE table tags_task (
-tags NUMERIC NOT NULL,
-tasks NUMERIC NOT NULL,
-FOREIGN KEY (tags) REFERENCES tags(id),
-FOREIGN KEY (tasks) REFERENCES tasks(id)
-)
+CREATE table tag_task
+(
+    tag  NUMERIC NOT NULL,
+    task NUMERIC NOT NULL,
+    FOREIGN KEY (tag) REFERENCES tag (id),
+    FOREIGN KEY (task) REFERENCES task (id)
+);

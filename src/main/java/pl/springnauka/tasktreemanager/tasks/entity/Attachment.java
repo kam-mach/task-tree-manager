@@ -5,7 +5,7 @@ import lombok.Data;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Data
-@Table("attachments")
+@Table("attachment")
 @AllArgsConstructor
 public class Attachment {
     private String filename;
