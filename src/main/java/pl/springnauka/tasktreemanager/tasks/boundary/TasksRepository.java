@@ -16,5 +16,5 @@ public interface TasksRepository {
 
     void update(Long id, String title, String description);
 
-    void addAttachment(Long id, String path);
+    void addAttachment(Long id, String path, String comment);
 }

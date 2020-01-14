@@ -7,4 +7,5 @@ class CreateTaskRequest {
 
     String title;
     String description;
+    String attachmentComment;
 }

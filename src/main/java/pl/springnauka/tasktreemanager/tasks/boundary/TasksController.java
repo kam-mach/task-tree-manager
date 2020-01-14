@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.springnauka.tasktreemanager.exceptions.NotFoundException;
 import pl.springnauka.tasktreemanager.tasks.control.TasksService;
-import pl.springnauka.tasktreemanager.tasks.entity.Task;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -46,7 +45,7 @@ public class TasksController {
         return ResponseEntity.ok(query.map(tasksService::filterAllByQuery)
                 .orElseGet(tasksService::fetchAll)
                 .stream()
-                .map(this::toTaskResponse)
+                .map(TaskResponse::from)
                 .collect(toList()));
     }
 
@@ -54,7 +53,7 @@ public class TasksController {
     public ResponseEntity<TaskResponse> getTaskById(@PathVariable Long id) {
         log.info("Zwracam zadanie {}", id);
         try {
-            TaskResponse taskResponse = toTaskResponse(tasksService.fetchById(id));
+            TaskResponse taskResponse = TaskResponse.from(tasksService.fetchById(id));
             return ResponseEntity.ok(taskResponse);
         } catch (NotFoundException e) {
             log.error(e.getMessage());
@@ -82,10 +81,13 @@ public class TasksController {
     }
 
     @PostMapping(path = "/{id}/attachments")
-    public ResponseEntity<String> addAttachment(@PathVariable Long id, @RequestParam("file") MultipartFile filename) {
+    public ResponseEntity<String> addAttachment(
+            @PathVariable Long id,
+            @RequestParam("comment") String comment,
+            @RequestParam("file") MultipartFile filename) {
         log.info("Dodaję załącznik o nazwie {} dla zadania {}", filename.getName(), id);
         try {
-            storageService.saveFile(id, filename);
+            storageService.saveFile(id, filename, comment);
         } catch (NotFoundException e) {
             log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -128,7 +130,4 @@ public class TasksController {
         }
     }
 
-    private TaskResponse toTaskResponse(Task task) {
-        return new TaskResponse(task.getId(), task.getTitle(), task.getDescription(), task.getCreatedAt(), task.getAttachments());
-    }
 }

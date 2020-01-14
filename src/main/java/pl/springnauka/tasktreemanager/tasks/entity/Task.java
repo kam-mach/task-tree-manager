@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -28,15 +29,19 @@ public class Task implements Comparable<Task> {
         this.createdAt = createdAt;
     }
 
-    public List<String> getAttachments() {
+    public List<String> getAttachmentsFilename() {
         return attachments
                 .stream()
                 .map(Attachment::getFilename)
                 .collect(toList());
     }
 
-    public void addAttachment(String filename) {
-        attachments.add(new Attachment(filename));
+    public List<Attachment> getAttachments() {
+        return new ArrayList<>(attachments);
+    }
+
+    public void addAttachment(String filename, String comment) {
+        attachments.add(new Attachment(filename, comment));
     }
 
     @Override

@@ -43,9 +43,9 @@ public class MemoryTasksRepository implements TasksRepository {
     }
 
     @Override
-    public void addAttachment(Long id, String path) {
+    public void addAttachment(Long id, String path, String comment) {
         Task task = findById(id).orElseThrow(() -> new NotFoundException("Zadanie nie znalezione"));
-        task.addAttachment(path);
+        task.addAttachment(path, comment);
     }
 
     private Optional<Task> findById(Long id) {
