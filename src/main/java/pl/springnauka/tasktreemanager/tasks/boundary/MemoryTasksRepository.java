@@ -6,6 +6,8 @@ import pl.springnauka.tasktreemanager.tasks.entity.Task;
 
 import java.util.*;
 
+import static java.util.stream.Collectors.toList;
+
 @Repository
 public class MemoryTasksRepository implements TasksRepository {
 
@@ -48,6 +50,7 @@ public class MemoryTasksRepository implements TasksRepository {
         task.addAttachment(path, comment);
     }
 
+
     private Optional<Task> findById(Long id) {
         return taskSet
                 .stream()
@@ -55,4 +58,13 @@ public class MemoryTasksRepository implements TasksRepository {
                 .findFirst();
     }
 
+    @Override
+    public List<Task> findByTitle(String title) {
+        return taskSet.stream().filter(task -> task.getTitle().equals(title)).collect(toList());
+    }
+
+    @Override
+    public List<Task> findWithAttachments() {
+        return taskSet.stream().filter(task -> !task.getAttachments().isEmpty()).collect(toList());
+    }
 }

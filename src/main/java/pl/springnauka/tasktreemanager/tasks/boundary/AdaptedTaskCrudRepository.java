@@ -45,12 +45,17 @@ public class AdaptedTaskCrudRepository implements TasksRepository {
 
     @Override
     public void update(Long id, String title, String description) {
-        taskCrudRepository.findById(id).map(task -> {
-            task.setTitle(title);
-            task.setDescription(description);
-            return task;
-        }).ifPresent(taskCrudRepository::save);
+        taskCrudRepository.updateTitleDescription(id, title, description);
+    }
 
+    @Override
+    public List<Task> findByTitle(String title) {
+        return taskCrudRepository.findByTitle(title);
+    }
+
+    @Override
+    public List<Task> findWithAttachments() {
+        return taskCrudRepository.findWithAttachments();
     }
 
     @Override

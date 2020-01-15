@@ -8,7 +8,6 @@ import pl.springnauka.tasktreemanager.tasks.boundary.TasksRepository;
 import pl.springnauka.tasktreemanager.tasks.entity.Task;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class TasksService {
@@ -40,10 +39,12 @@ public class TasksService {
         return tasksRepository.fetchAll();
     }
 
-    public List<Task> filterAllByQuery(String query) {
-        return tasksRepository.fetchAll()
-                .stream().filter(task -> task.getTitle().contains(query) || task.getDescription().contains(query)
-                ).collect(Collectors.toList());
+    public List<Task> filterByTitle(String title) {
+        return tasksRepository.findByTitle(title);
+    }
+
+    public List<Task> findWithAttachments() {
+        return tasksRepository.findWithAttachments();
     }
 
     public void deleteById(Long id) {

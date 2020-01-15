@@ -36,13 +36,27 @@ public class TasksController {
     private final TagsService tagsService;
 
     @GetMapping
-    public ResponseEntity<List<TaskResponse>> getTasks(@RequestParam Optional<String> query) {
-        log.info("Zwracam listę zadań! z query {}", query);
-        return ResponseEntity.ok(query.map(tasksService::filterAllByQuery)
+    public ResponseEntity<List<TaskResponse>> getTasks(@RequestParam Optional<String> title) {
+        log.info("Zwracam listę zadań z tytułem {}", title);
+        return ResponseEntity.ok(title.map(tasksService::filterByTitle)
                 .orElseGet(tasksService::fetchAll)
                 .stream()
                 .map(this::toTaskResponse)
                 .collect(toList()));
+    }
+
+    @GetMapping(path = "/_search")
+    public ResponseEntity<List<TaskResponse>> searchTask(@RequestParam(defaultValue = "false") Boolean attachments) {
+        if (attachments) {
+            log.info("Zwracam listę zadań z załącznikami");
+            return ResponseEntity.ok(toTaskResponseList(tasksService.findWithAttachments()));
+        } else {
+            return ResponseEntity.ok(toTaskResponseList(tasksService.fetchAll()));
+        }
+    }
+
+    public List<TaskResponse> toTaskResponseList(List<Task> task) {
+        return task.stream().map(this::toTaskResponse).collect(toList());
     }
 
     @GetMapping(path = "/{id}")
