@@ -1,5 +1,6 @@
 package pl.springnauka.tasktreemanager.tasks.control;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.springnauka.tasktreemanager.Clock;
 import pl.springnauka.tasktreemanager.tags.control.TagsService;
@@ -10,16 +11,11 @@ import pl.springnauka.tasktreemanager.tasks.entity.Task;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TasksService {
     private final TasksRepository tasksRepository;
     private final TagsService tagsService;
     private final Clock clock;
-
-    public TasksService(TasksRepository tasksRepository, TagsService tagsService, Clock clock) {
-        this.tasksRepository = tasksRepository;
-        this.clock = clock;
-        this.tagsService = tagsService;
-    }
 
     public Task addTask(String title, String description) {
         Task task = new Task(

@@ -47,4 +47,15 @@ Content-Type: application/json
 {
   "tagId": "2"
 }
+
+###
+
+POST http://localhost:8080/api/projects/6/task/99
+Content-Type: application/json
+
+###
+
+DELETE http://localhost:8080/api/projects/task/1
+Content-Type: application/json
+
 ###

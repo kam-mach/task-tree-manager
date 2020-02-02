@@ -8,5 +8,9 @@ VALUES ('Zadanie 1', 'Wykonać zadanie z modułu 1', NOW()),
 
 INSERT INTO tag(name)
 VALUES ('Pilne'),
-      ('W domu'),
-      ('Na mieście');
+       ('W domu'),
+       ('Na mieście');
+
+INSERT INTO project(name, description)
+VALUES ('Projekt produkcyjny', 'Przekładowy projekt'),
+       ('Projekt testowy', 'Projekt do testów');
