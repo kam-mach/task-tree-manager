@@ -21,4 +21,6 @@ public interface TasksRepository {
     List<Task> findWithAttachments();
 
     void addAttachment(Long id, String path, String comment);
+
+    void addAll(Iterable<Task> taskList);
 }

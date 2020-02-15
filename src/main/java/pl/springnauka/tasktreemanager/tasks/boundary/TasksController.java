@@ -12,7 +12,6 @@ import pl.springnauka.tasktreemanager.exceptions.NotFoundException;
 import pl.springnauka.tasktreemanager.tags.control.TagsService;
 import pl.springnauka.tasktreemanager.tags.entity.Tag;
 import pl.springnauka.tasktreemanager.tasks.control.TasksService;
-import pl.springnauka.tasktreemanager.tasks.entity.TagRef;
 import pl.springnauka.tasktreemanager.tasks.entity.Task;
 
 import javax.servlet.http.HttpServletRequest;
@@ -166,9 +165,8 @@ public class TasksController {
     }
 
     private TaskResponse toTaskResponse(Task task) {
-        List<Long> tagsId = task.getTagRefs().stream().map(TagRef::getTag).collect(toList());
-        Set<Tag> tagSet = tagsService.getAllById(tagsId);
-        return TaskResponse.from(task, tagSet);
+        Set<Tag> tags = task.getTags();
+        return TaskResponse.from(task, tags);
     }
 
 }

@@ -1,27 +1,38 @@
 package pl.springnauka.tasktreemanager.tasks.entity;
 
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+import lombok.NoArgsConstructor;
 import pl.springnauka.tasktreemanager.tags.entity.Tag;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Data
-@Table("task")
+@Table(name = "task")
+@NoArgsConstructor
+@Entity
 public class Task implements Comparable<Task> {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String description;
     private LocalDateTime createdAt;
-    //pierwotnie lista, dla testów jdbc zostanie Set, sprawdzić zachowanie przy użyciu JPA
-    private Set<Attachment> attachments;
-    private Set<TagRef> tagRefs;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "task")
+    private Set<Attachment> attachments = new HashSet<>(0);
+
+    @ManyToMany
+    @JoinTable(name = "tag_task",
+            joinColumns = @JoinColumn(name = "task"),
+            inverseJoinColumns = @JoinColumn(name = "tag"))
+    private Set<Tag> tags = new HashSet<>(0);
 
     public Task(String title, String description, LocalDateTime createdAt) {
         this.title = title;
@@ -38,11 +49,11 @@ public class Task implements Comparable<Task> {
     }
 
     public void addTag(Tag tag) {
-        tagRefs.add(new TagRef(tag));
+        tags.add(tag);
     }
 
     public void removeTag(Tag tag) {
-        tagRefs.remove(new TagRef(tag));
+        tags.remove(tag);
     }
 
 

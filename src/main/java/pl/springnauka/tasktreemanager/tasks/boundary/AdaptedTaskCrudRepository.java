@@ -6,10 +6,8 @@ import org.springframework.stereotype.Repository;
 import pl.springnauka.tasktreemanager.exceptions.NotFoundException;
 import pl.springnauka.tasktreemanager.tasks.entity.Task;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.StreamSupport;
-
-import static java.util.stream.Collectors.toList;
 
 @Primary
 @Repository
@@ -24,10 +22,13 @@ public class AdaptedTaskCrudRepository implements TasksRepository {
     }
 
     @Override
+    public void addAll(Iterable<Task> taskList) {
+        taskCrudRepository.saveAll(taskList);
+    }
+
+    @Override
     public List<Task> fetchAll() {
-        return StreamSupport
-                .stream(taskCrudRepository.findAll().spliterator(), false)
-                .collect(toList());
+        return new ArrayList<>(taskCrudRepository.findAll());
 
     }
 
@@ -50,12 +51,13 @@ public class AdaptedTaskCrudRepository implements TasksRepository {
 
     @Override
     public List<Task> findByTitle(String title) {
-        return taskCrudRepository.findByTitle(title);
+        return taskCrudRepository.findByTitleLike(title);
     }
 
     @Override
     public List<Task> findWithAttachments() {
-        return taskCrudRepository.findWithAttachments();
+        return new ArrayList<>();
+//        return taskCrudRepository.findWithAttachments();
     }
 
     @Override

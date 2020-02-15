@@ -1,13 +1,23 @@
 package pl.springnauka.tasktreemanager.tasks.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.relational.core.mapping.Table;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @Data
-@Table("attachment")
-@AllArgsConstructor
+@Table(name = "attachment")
+@NoArgsConstructor
+@Entity
 public class Attachment {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String filename;
     private String comment;
+
+    public Attachment(String filename, String comment) {
+        this.filename = filename;
+        this.comment = comment;
+    }
 }

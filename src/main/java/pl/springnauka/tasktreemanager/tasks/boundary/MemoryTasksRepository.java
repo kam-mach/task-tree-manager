@@ -5,6 +5,7 @@ import pl.springnauka.tasktreemanager.exceptions.NotFoundException;
 import pl.springnauka.tasktreemanager.tasks.entity.Task;
 
 import java.util.*;
+import java.util.stream.StreamSupport;
 
 import static java.util.stream.Collectors.toList;
 
@@ -16,6 +17,11 @@ public class MemoryTasksRepository implements TasksRepository {
     @Override
     public void add(Task task) {
         taskSet.add(task);
+    }
+
+    @Override
+    public void addAll(Iterable<Task> taskList) {
+        taskSet.addAll(StreamSupport.stream(taskList.spliterator(), false).collect(toList()));
     }
 
     @Override
