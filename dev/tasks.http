@@ -1,4 +1,4 @@
-POST http://localhost:8080/api/tasks
+POST {{api}}/tasks
 Content-Type: application/json
 
 {
@@ -7,7 +7,7 @@ Content-Type: application/json
 }
 
 ###
-PUT http://localhost:8080/api/tasks/1
+PUT {{api}}/tasks/1
 Content-Type: application/json
 
 {
@@ -17,16 +17,16 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/api/tasks
+GET {{api}}/tasks
 Accept: application/json
 
 ###
 
-GET http://localhost:8080/api/tasks?title=danie
+GET {{api}}/tasks?title=danie
 Accept: application/json
 ###
 
-DELETE http://localhost:8080/api/tasks/1
+DELETE {{api}}/tasks/1
 Accept: application/json
 
 ###
@@ -41,7 +41,7 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:8080/api/tasks/2/tags
+POST {{api}}/tasks/2/tags
 Content-Type: application/json
 
 {
@@ -50,12 +50,12 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:8080/api/projects/6/task/99
+POST {{api}}/projects/6/task/99
 Content-Type: application/json
 
 ###
 
-DELETE http://localhost:8080/api/projects/task/1
+DELETE {{api}}/projects/task/1
 Content-Type: application/json
 
 ###

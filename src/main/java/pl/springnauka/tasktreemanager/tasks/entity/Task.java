@@ -15,6 +15,13 @@ import java.util.Set;
 @Table(name = "task")
 @NoArgsConstructor
 @Entity
+@NamedEntityGraph(
+        name = "Task.detail",
+        attributeNodes = {
+                @NamedAttributeNode("attachments"),
+                @NamedAttributeNode("tags")
+        }
+)
 public class Task implements Comparable<Task> {
 
     @Id

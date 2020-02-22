@@ -32,4 +32,17 @@ class TaskCrudRepositoryTest {
         assertEquals(taskList.get(0).getTitle(), TASK_NAME);
     }
 
+    @Test
+    public void shouldLoadView() {
+        //given
+        Task task = new Task(TASK_NAME, "Pod zabudowe", clock.time());
+        //when
+        taskCrudRepository.save(task);
+        List<TaskView> taskList = taskCrudRepository.findAllBy();
+        //then
+        assertEquals(taskList.size(), 1);
+        assertEquals(taskList.get(0).getTitle(), TASK_NAME);
+    }
+
+
 }
