@@ -1,4 +1,13 @@
 server.port: 9000
 
 app.tasks:
-      localpath: C:/tasktree
+  localpath: C:/tasktree
+
+spring:
+  h2:
+    console:
+      enabled: true
+
+logging:
+  level:
+    org.springframework.jdbc.core: DEBUG

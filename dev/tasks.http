@@ -1,4 +1,4 @@
-POST http://localhost:8080/api/tasks
+POST {{api}}/tasks
 Content-Type: application/json
 
 {
@@ -7,7 +7,7 @@ Content-Type: application/json
 }
 
 ###
-PUT http://localhost:8080/api/tasks/1
+PUT {{api}}/tasks/1
 Content-Type: application/json
 
 {
@@ -17,26 +17,45 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/api/tasks
+GET {{api}}/tasks
 Accept: application/json
 
 ###
 
-GET http://localhost:8080/api/tasks/9
+GET {{api}}/tasks?title=danie
+Accept: application/json
+###
+
+DELETE {{api}}/tasks/1
 Accept: application/json
 
 ###
 
-DELETE http://localhost:8080/api/tasks/9
-Accept: application/json
-
-###
-
-PUT http://localhost:9000/api/tasks/0
+PUT localhost:8080/api/tasks/3
 Content-Type: application/json
+
 {
-"title": "Zadanie 0",
-"description": "Nadpisanie"
+  "title": "Zadaie 0",
+  "description": "Nadpisanie 2"
 }
+
+###
+
+POST {{api}}/tasks/2/tags
+Content-Type: application/json
+
+{
+  "tagId": "2"
+}
+
+###
+
+POST {{api}}/projects/6/task/99
+Content-Type: application/json
+
+###
+
+DELETE {{api}}/projects/task/1
+Content-Type: application/json
 
 ###

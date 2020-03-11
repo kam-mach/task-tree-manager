@@ -9,15 +9,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.springnauka.tasktreemanager.exceptions.NotFoundException;
+import pl.springnauka.tasktreemanager.tags.control.TagsService;
+import pl.springnauka.tasktreemanager.tags.entity.Tag;
 import pl.springnauka.tasktreemanager.tasks.control.TasksService;
 import pl.springnauka.tasktreemanager.tasks.entity.Task;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
 
@@ -25,29 +27,35 @@ import static java.util.stream.Collectors.toList;
 @RestController
 @RequestMapping(path = "/api/tasks")
 @RequiredArgsConstructor
-@CrossOrigin
+//@CrossOrigin
 public class TasksController {
 
     private final StorageService storageService;
     private final TasksService tasksService;
-
-    @PostConstruct
-    void init() {
-        tasksService.addTask("Zadanie 1", "Wykonać zadanie z modułu 1");
-        tasksService.addTask("Zadanie 2", "Wykonać zadanie z modułu 2");
-        tasksService.addTask("Zadanie 3", "Wykonać zadanie z modułu 3");
-        tasksService.addTask("Zadanie 4", "Wykonać zadanie z modułu 4");
-        tasksService.addTask("Zadanie 5", "Wykonać zadanie z modułu 5");
-    }
+    private final TagsService tagsService;
 
     @GetMapping
-    public ResponseEntity<List<TaskResponse>> getTasks(@RequestParam Optional<String> query) {
-        log.info("Zwracam listę zadań! z query {}", query);
-        return ResponseEntity.ok(query.map(tasksService::filterAllByQuery)
+    public ResponseEntity<List<TaskResponse>> getTasks(@RequestParam Optional<String> title) {
+        log.info("Zwracam listę zadań z tytułem {}", title);
+        return ResponseEntity.ok(title.map(tasksService::filterByTitle)
                 .orElseGet(tasksService::fetchAll)
                 .stream()
                 .map(this::toTaskResponse)
                 .collect(toList()));
+    }
+
+    @GetMapping(path = "/_search")
+    public ResponseEntity<List<TaskResponse>> searchTask(@RequestParam(defaultValue = "false") Boolean attachments) {
+        if (attachments) {
+            log.info("Zwracam listę zadań z załącznikami");
+            return ResponseEntity.ok(toTaskResponseList(tasksService.findWithAttachments()));
+        } else {
+            return ResponseEntity.ok(toTaskResponseList(tasksService.fetchAll()));
+        }
+    }
+
+    public List<TaskResponse> toTaskResponseList(List<Task> task) {
+        return task.stream().map(this::toTaskResponse).collect(toList());
     }
 
     @GetMapping(path = "/{id}")
@@ -63,7 +71,8 @@ public class TasksController {
     }
 
     @GetMapping(path = "/{id}/attachments/{filename}")
-    public ResponseEntity<?> getAttachment(@PathVariable Long id, @PathVariable String filename, HttpServletRequest request) {
+    public ResponseEntity<?> getAttachment(@PathVariable Long id, @PathVariable String filename, HttpServletRequest
+            request) {
         log.info("Zwracam załącznik o nazwie {} dla zadania {}", filename, id);
         try {
             Resource resource = storageService.loadFile(id, filename);
@@ -82,10 +91,13 @@ public class TasksController {
     }
 
     @PostMapping(path = "/{id}/attachments")
-    public ResponseEntity<String> addAttachment(@PathVariable Long id, @RequestParam("file") MultipartFile filename) {
+    public ResponseEntity<String> addAttachment(
+            @PathVariable Long id,
+            @RequestParam("comment") String comment,
+            @RequestParam("file") MultipartFile filename) {
         log.info("Dodaję załącznik o nazwie {} dla zadania {}", filename.getName(), id);
         try {
-            storageService.saveFile(id, filename);
+            storageService.saveFile(id, filename, comment);
         } catch (NotFoundException e) {
             log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -102,6 +114,30 @@ public class TasksController {
         log.info("Dodaję zadanie {}", task);
         tasksService.addTask(task.title, task.description);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PostMapping(path = "/{id}/tags")
+    public ResponseEntity addTag(@PathVariable Long id, @RequestBody AddTagRequest request) {
+        log.info("Dodaję tag {}", id);
+        try {
+            tasksService.addTag(id, request.getTagId());
+            return ResponseEntity.ok().build();
+        } catch (NotFoundException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @DeleteMapping(path = "/{id}/tags/{tagId}")
+    public ResponseEntity removeTag(@PathVariable Long id, @PathVariable Long tagId) {
+        log.info("Usuwam tag {}", id);
+        try {
+            tasksService.removeTag(id, tagId);
+            return ResponseEntity.ok().build();
+        } catch (NotFoundException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @DeleteMapping(path = "/{id}")
@@ -129,6 +165,8 @@ public class TasksController {
     }
 
     private TaskResponse toTaskResponse(Task task) {
-        return new TaskResponse(task.getId(), task.getTitle(), task.getDescription(), task.getCreatedAt(), task.getFiles());
+        Set<Tag> tags = task.getTags();
+        return TaskResponse.from(task, tags);
     }
+
 }

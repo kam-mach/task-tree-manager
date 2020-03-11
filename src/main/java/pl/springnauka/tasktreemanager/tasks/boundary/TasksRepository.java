@@ -16,5 +16,11 @@ public interface TasksRepository {
 
     void update(Long id, String title, String description);
 
-    void addFiles(Long id, String path);
+    List<Task> findByTitle(String title);
+
+    List<Task> findWithAttachments();
+
+    void addAttachment(Long id, String path, String comment);
+
+    void addAll(Iterable<Task> taskList);
 }

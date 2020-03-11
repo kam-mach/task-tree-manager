@@ -21,7 +21,7 @@ public class TaskViewController {
 
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("tasks", tasksService.fetchAll());
+        model.addAttribute("tasks", tasksService.fetchAll().stream().map(TaskViewResponse::from));
         model.addAttribute("newTask", new CreateTaskRequest());
         return "home";
     }
@@ -32,7 +32,7 @@ public class TaskViewController {
             @RequestParam("attachment") MultipartFile attachment) throws IOException {
         Task task = tasksService.addTask(request.title, request.description);
         if (!attachment.isEmpty()) {
-            storageService.saveFile(task.getId(), attachment);
+            storageService.saveFile(task.getId(), attachment, request.getAttachmentComment());
         }
         return "redirect:/";
     }

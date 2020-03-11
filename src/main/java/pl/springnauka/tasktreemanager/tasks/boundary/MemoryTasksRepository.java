@@ -5,6 +5,9 @@ import pl.springnauka.tasktreemanager.exceptions.NotFoundException;
 import pl.springnauka.tasktreemanager.tasks.entity.Task;
 
 import java.util.*;
+import java.util.stream.StreamSupport;
+
+import static java.util.stream.Collectors.toList;
 
 @Repository
 public class MemoryTasksRepository implements TasksRepository {
@@ -14,6 +17,11 @@ public class MemoryTasksRepository implements TasksRepository {
     @Override
     public void add(Task task) {
         taskSet.add(task);
+    }
+
+    @Override
+    public void addAll(Iterable<Task> taskList) {
+        taskSet.addAll(StreamSupport.stream(taskList.spliterator(), false).collect(toList()));
     }
 
     @Override
@@ -43,12 +51,11 @@ public class MemoryTasksRepository implements TasksRepository {
     }
 
     @Override
-    public void addFiles(Long id, String path) {
+    public void addAttachment(Long id, String path, String comment) {
         Task task = findById(id).orElseThrow(() -> new NotFoundException("Zadanie nie znalezione"));
-        List<String> files = task.getFiles();
-        files.add(path);
-        task.setFiles(files);
+        task.addAttachment(path, comment);
     }
+
 
     private Optional<Task> findById(Long id) {
         return taskSet
@@ -57,4 +64,13 @@ public class MemoryTasksRepository implements TasksRepository {
                 .findFirst();
     }
 
+    @Override
+    public List<Task> findByTitle(String title) {
+        return taskSet.stream().filter(task -> task.getTitle().equals(title)).collect(toList());
+    }
+
+    @Override
+    public List<Task> findWithAttachments() {
+        return taskSet.stream().filter(task -> !task.getAttachments().isEmpty()).collect(toList());
+    }
 }

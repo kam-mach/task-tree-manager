@@ -1,34 +1,27 @@
 package pl.springnauka.tasktreemanager.tasks.control;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.springnauka.tasktreemanager.Clock;
+import pl.springnauka.tasktreemanager.tags.control.TagsService;
+import pl.springnauka.tasktreemanager.tags.entity.Tag;
 import pl.springnauka.tasktreemanager.tasks.boundary.TasksRepository;
 import pl.springnauka.tasktreemanager.tasks.entity.Task;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class TasksService {
     private final TasksRepository tasksRepository;
+    private final TagsService tagsService;
     private final Clock clock;
-
-    private final AtomicLong nextTaskId = new AtomicLong(0);
-
-    public TasksService(TasksRepository tasksRepository, Clock clock) {
-        this.tasksRepository = tasksRepository;
-        this.clock = clock;
-    }
 
     public Task addTask(String title, String description) {
         Task task = new Task(
-                nextTaskId.getAndIncrement(),
                 title,
                 description,
-                clock.time(),
-                new ArrayList<>()
+                clock.time()
         );
         tasksRepository.add(task);
         return task;
@@ -42,10 +35,12 @@ public class TasksService {
         return tasksRepository.fetchAll();
     }
 
-    public List<Task> filterAllByQuery(String query) {
-        return tasksRepository.fetchAll()
-                .stream().filter(task -> task.getTitle().contains(query) || task.getDescription().contains(query)
-                ).collect(Collectors.toList());
+    public List<Task> filterByTitle(String title) {
+        return tasksRepository.findByTitle(title);
+    }
+
+    public List<Task> findWithAttachments() {
+        return tasksRepository.findWithAttachments();
     }
 
     public void deleteById(Long id) {
@@ -54,5 +49,19 @@ public class TasksService {
 
     public Task fetchById(Long id) {
         return tasksRepository.fetchById(id);
+    }
+
+    public void addTag(Long id, Long tagId) {
+        Task task = tasksRepository.fetchById(id);
+        Tag tag = tagsService.findById(tagId);
+        task.addTag(tag);
+        tasksRepository.add(task);
+    }
+
+    public void removeTag(Long id, Long tagId) {
+        Task task = tasksRepository.fetchById(id);
+        Tag tag = tagsService.findById(tagId);
+        task.removeTag(tag);
+        tasksRepository.add(task);
     }
 }
